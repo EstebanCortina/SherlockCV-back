@@ -1,5 +1,7 @@
-const router = require("express").Router();
-const api_router = require("./api.js");
+import express from 'express'
+const router = express.Router()
+
+import api_router from './api.js'
 
 router.get("/", (req, res) => {
   res.status(200).send("SherlockCV");
@@ -7,4 +9,4 @@ router.get("/", (req, res) => {
 
 router.use("/api", api_router);
 
-module.exports = router;
+export default router
