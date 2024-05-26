@@ -13,8 +13,6 @@ const processFiles = (req: Request, res: Response, next: NextFunction) => {
         extractFileText(file).then(response=>{
             metaFile = response;
             fileContents.push(metaFile);
-            // Aquí puedes hacer lo que quieras con el contenido de los archivos
-            console.log("Contenido de los archivos:", fileContents);
         })
         .catch(err=>{
             console.error(err);
@@ -22,6 +20,8 @@ const processFiles = (req: Request, res: Response, next: NextFunction) => {
             return res.status(500).send({ message: err?.message });
         })
     }
+    // @ts-ignore
+    req.candidatesInfo = fileContents;
     next()
 };
 
