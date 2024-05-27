@@ -3,25 +3,19 @@ import extractFileText from "../handlers/extractFileText.js";
 import {MetaFile} from "../types/MetaFile.js";
 
 
-const processFiles = (req: Request, res: Response, next: NextFunction) => {
+const processFiles = async (req: Request, res: Response, next: NextFunction) => {
     const fileContents: MetaFile[] = [];
-    let metaFile: MetaFile;
-
-    // @ts-ignore
+// @ts-ignore
     for (let file of req.files) {
-        // @ts-ignore
-        extractFileText(file).then(response=>{
-            metaFile = response;
-            fileContents.push(metaFile);
-        })
-        .catch(err=>{
-            console.error(err);
-            // @ts-ignore
-            return res.status(500).send({ message: err?.message });
-        })
+        try{
+            const response = await extractFileText(file)
+            fileContents.push(response);
+        }catch(err){
+            return res.status(500).send({message: err?.message});
+        }
     }
     // @ts-ignore
-    req.candidatesInfo = fileContents;
+    req.candidatesInfo = fileContents
     next()
 };
 
