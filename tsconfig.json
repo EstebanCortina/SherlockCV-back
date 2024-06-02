@@ -106,5 +106,8 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "../../../AppData/Local/JetBrains/WebStorm2024.1/javascript/typings/mocha/10.0.6/node_modules/@types/mocha/index.d.ts"
+  ]
 }

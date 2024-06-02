@@ -11,6 +11,7 @@ const processFiles = async (req: Request, res: Response, next: NextFunction) => 
             const response = await extractFileText(file)
             fileContents.push(response);
         }catch(err){
+            // @ts-ignore
             return res.status(500).send({message: err?.message});
         }
     }
