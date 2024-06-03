@@ -49,10 +49,12 @@ export class GeminiAiModel extends AiModel {
         if(!(this.gemini instanceof GenerativeModel)) {
             throw new Error("Bad Gemini SDK Generative Model");
         }
-
         // TODO: make a prompt handler or make the PromptMaker
         let rawPrompt: string =`${prompt.context} ${prompt.contextData} ${prompt.instructions} ${prompt.fewShotExamples} ${prompt.dataInput}`;
         rawPrompt += `\n5.-  Salida de datos en formato Array JSON:`
+        if ((await this.countPromptTokens(rawPrompt)) > this.tokensMaxLevel){
+            throw new Error("Tokens max level exceeded in Request Prompt");
+        }
         try {
             const result = await this.gemini.generateContent(rawPrompt);
             return result.response.text();
@@ -60,5 +62,13 @@ export class GeminiAiModel extends AiModel {
             console.log(err)
             throw err
         }
+    }
+
+    async countPromptTokens(rawPrompt:string): Promise<number> {
+        if(!(this.gemini instanceof GenerativeModel)) {
+            throw new Error("Bad Gemini SDK Generative Model");
+        }
+        const {totalTokens} = await this.gemini.countTokens(rawPrompt);
+        return totalTokens
     }
 }

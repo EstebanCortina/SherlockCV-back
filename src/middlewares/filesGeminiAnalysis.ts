@@ -1,5 +1,3 @@
-import {GenerationConfig} from "../types/GenerationConfig.js";
-import {GenerativeModel, GoogleGenerativeAI} from "@google/generative-ai";
 import {GeminiAiModel} from "../models/GeminiAiModel.js";
 import {Request, Response, NextFunction} from "express";
 import {Prompt} from "../types/Prompt.js";

@@ -5,4 +5,5 @@ export default abstract class AiModel {
 
     abstract initModel(): void
     abstract sendPrompt (prompt: Prompt): Promise<string> | string
+    abstract countPromptTokens(rawPrompt: string): Promise<number> | number;
 }
