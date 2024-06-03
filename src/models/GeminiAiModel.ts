@@ -1,9 +1,7 @@
 import AiModel from "../abstract_classes/AiModel.js";
-import {AiSdk} from "../types/AiSdk.js";
 import {GenerativeModel, GoogleGenerativeAI} from "@google/generative-ai";
 import {GenerationConfig} from "../types/GenerationConfig.js";
 import {Prompt} from "../types/Prompt.js";
-import {raw} from "express";
 
 export class GeminiAiModel extends AiModel {
     private geminiAiModelName: string
