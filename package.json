@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon ./dist/app.js",
     "prod": "tsc&& node ./dist/app.js",
+    "build": "tsc",
     "test": "mocha ./dist/test"
   },
   "keywords": [],
