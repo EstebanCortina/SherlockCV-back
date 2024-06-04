@@ -2,9 +2,6 @@ name: Mocha Unittests
 
 on:
   push:
-  pull_request:
-      types: [ opened, synchronize, reopened ]
-  workflow_dispatch:
 
 jobs:
   build:
