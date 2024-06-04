@@ -1,7 +1,7 @@
 export type Prompt = {
-    context: string,
-    contextData: string | null,
+    context?: string,
+    contextData?: string | null,
     instructions: string,
-    fewShotExamples: string | null,
+    fewShotExamples?: string | null,
     dataInput: string
 }

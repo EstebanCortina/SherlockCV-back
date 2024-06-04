@@ -13,7 +13,7 @@ export class GeminiAiModel extends AiModel {
         this.initModel()
     }
 
-    private __getModelConfig(): GenerationConfig  {
+    protected __getModelConfig(): GenerationConfig  {
         let generationConfig: GenerationConfig;
         if(!process.env.AI_TEMPERATURE ||
             !process.env.AI_TOP_P ||
@@ -22,9 +22,9 @@ export class GeminiAiModel extends AiModel {
             throw new Error("Missing Gemini Generation Configuration")
         }
         return generationConfig = {
-            temperature: parseInt(process.env.AI_TEMPERATURE),
-            topP: parseInt(process.env.AI_TOP_P),
-            topK: parseInt(process.env.AI_TOP_K)
+            temperature: parseFloat(process.env.AI_TEMPERATURE), //0
+            topP: parseFloat(process.env.AI_TOP_P), // 0
+            topK: parseFloat(process.env.AI_TOP_K)// 1
         }
     }
 
@@ -46,14 +46,18 @@ export class GeminiAiModel extends AiModel {
     }
 
     async sendPrompt(prompt: Prompt): Promise<string> {
-        if(!(this.gemini instanceof GenerativeModel)) {
-            throw new Error("Bad Gemini SDK Generative Model");
-        }
         // TODO: make a prompt handler or make the PromptMaker
         let rawPrompt: string =`${prompt.context} ${prompt.contextData} ${prompt.instructions} ${prompt.fewShotExamples} ${prompt.dataInput}`;
         rawPrompt += `\n5.-  Salida de datos en formato Array JSON:`
         if ((await this.countPromptTokens(rawPrompt)) > this.tokensMaxLevel){
             throw new Error("Tokens max level exceeded in Request Prompt");
+        }
+        return this.__callPromptApi(rawPrompt)
+    }
+
+    private async __callPromptApi(rawPrompt: string): Promise<string> {
+        if(!(this.gemini instanceof GenerativeModel)) {
+            throw new Error("Bad Gemini SDK Generative Model");
         }
         try {
             const result = await this.gemini.generateContent(rawPrompt);
