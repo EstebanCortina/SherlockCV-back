@@ -14,6 +14,16 @@ jobs:
       matrix:
         node-version: [22.x]
 
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      PROMPT_CONTEXT: ${{ secrets.PROMPT_CONTEXT }}
+      PROMPT_CONTEXT_DATA: ${{ secrets.PROMPT_CONTEXT_DATA }}
+      PROMPT_INSTRUCTIONS: ${{ secrets.PROMPT_INSTRUCTIONS }}
+      PROMPT_FEW_SHOTS_EXAMPLES: ${{ secrets.GEMINI_API_KEY }}
+      AI_TEMPERATURE: ${{ secrets.AI_TEMPERATURE }}
+      AI_TOP_P: ${{ secrets.AI_TOP_P }}
+      AI_TOP_K: ${{ secrets.AI_TOP_K }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
