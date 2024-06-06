@@ -1,6 +1,4 @@
 import express, {Request, Response, Router} from 'express';
-import processFiles from "../middlewares/processFiles.js";
-import validateFiles from "../middlewares/validateFiles.js";
 import multer from "multer"
 
 const router: Router = express.Router();
@@ -19,14 +17,5 @@ const upload = multer();
 router.get("/", (req: Request, res: Response): void => {
   res.status(200).send("api");
 });
-
-import upload_controller from "../controllers/upload_controllers.js";
-import filesGeminiAnalysis from "../middlewares/filesGeminiAnalysis.js";
-router.post("/upload",
-    upload.array('file'),
-    validateFiles,
-    processFiles,
-    filesGeminiAnalysis,
-    upload_controller);
 
 export default router
