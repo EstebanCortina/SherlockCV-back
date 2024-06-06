@@ -10,7 +10,8 @@ router.get("/", (req, res) => {
 });
 
 import signUpController from '../controllers/signUpController.js'
-router.post("/signup", signUpController);
+import bodyValidator from "../middlewares/bodyValidator.js";
+router.post("/signup", bodyValidator,signUpController);
 
 import upload_controller from "../controllers/upload_controllers.js";
 import filesGeminiAnalysis from "../middlewares/filesGeminiAnalysis.js";
