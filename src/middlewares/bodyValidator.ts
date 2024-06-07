@@ -6,13 +6,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     const module = await import((`../types/validators/${validatorFilename}`))
 
     for (let [key, value] of Object.entries(req.body)) {
-        if (!module.default.hasOwnProperty(key)) {
+        if (!module.default.hasOwnProperty(key) || typeof value !== module.default[key]) {
             return res.status(400).send({error: "bad key"})
-        }
-
-        // @ts-ignore
-        if(typeof value !== module.default[key]) {
-            return res.status(400).send({error: "bad value"})
         }
     }
     next()
