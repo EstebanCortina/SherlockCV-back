@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import getBodyValidatorByRoutePath from "../handlers/getBodyValidatorByRoutePath.js";
+import getBodyValidatorByRoutePath from "../helpers/getBodyValidatorByRoutePath.js";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
     const validatorFilename = getBodyValidatorByRoutePath(req.route.path)
