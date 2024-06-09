@@ -18,7 +18,7 @@ describe('bodyValidator', () => {
     it('should respond with 400 for bad request', async ()=> {
         let req = {
             body: {"name": 123},
-            route: {path: "/signup/:id"}
+            route: {path: "/signup"}
         };
         await bodyValidator(
             (req as unknown as Request),
@@ -33,7 +33,7 @@ describe('bodyValidator', () => {
     it('should pass validation body', async ()=> {
         let req = {
             body: {"name": "Esteban"},
-            route: {path: "/signup/:id"}
+            route: {path: "/signup"}
         };
         await bodyValidator(
             (req as unknown as Request),
