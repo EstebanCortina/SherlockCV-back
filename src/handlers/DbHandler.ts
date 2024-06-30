@@ -22,7 +22,18 @@ export default class DbHandler extends Database {
         if (!process.env.DB_URI) {
             throw new Error("DB_URI environment variable is missing");
         }
+
+        if (!process.env.DB_PEM) {
+            throw new Error("DB_PEM environment variable is missing");
+        }
         const uri = new URL(process.env.DB_URI);
+
+        const sslCert = process.env.DB_PEM;
+
+        const sslCertPath = 'config.pem';
+
+        fs.writeFileSync(sslCertPath, sslCert);
+
 
         const poolConfig: PoolOptions = {
             host: uri.hostname,
@@ -35,7 +46,7 @@ export default class DbHandler extends Database {
             queueLimit: 0,
             ssl: {
                 rejectUnauthorized: true,
-                ca: fs.readFileSync('./dist/config/sherlock-db-ca.pem'),
+                ca: fs.readFileSync('config.pem'),
             }
         }
         DbHandler.poolConfig = poolConfig;
