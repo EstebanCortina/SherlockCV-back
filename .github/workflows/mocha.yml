@@ -20,6 +20,7 @@ jobs:
       AI_TEMPERATURE: ${{ secrets.AI_TEMPERATURE }}
       AI_TOP_P: ${{ secrets.AI_TOP_P }}
       AI_TOP_K: ${{ secrets.AI_TOP_K }}
+      DB_URI: ${{ secrets.DB_URI_QA }}
 
     steps:
       - name: Checkout repository
