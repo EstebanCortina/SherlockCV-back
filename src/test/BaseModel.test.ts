@@ -1,6 +1,4 @@
-import sinon from 'sinon'
 import {expect} from "chai";
-import BaseModel from "../abstract_classes/BaseModel.js"
 import UserModel from "../models/UserModel.js"
 
 describe('BaseModel', () => {

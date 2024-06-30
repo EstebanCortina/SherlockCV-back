@@ -1,3 +1,3 @@
-import DbController from "../controllers/DbController.js";
+import DbHandler from "../handlers/DbHandler.js";
 
-new DbController()
+new DbHandler()

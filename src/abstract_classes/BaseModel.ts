@@ -1,6 +1,6 @@
-import DbController from "../controllers/DbController.js";
+import DbHandler from "../handlers/DbHandler.js";
 
-export default abstract class BaseModel extends DbController {
+export default abstract class BaseModel extends DbHandler {
     private __query: string | null = null
     private __where: string | null = null
     private readonly __tableName: string

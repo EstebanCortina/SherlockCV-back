@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import {PoolOptions, Pool, createPool} from "mysql2";
 import Database from "../abstract_classes/Database.js";
 
-export default class DbController extends Database {
+export default class DbHandler extends Database {
     static poolConfig: null | PoolOptions = null;
     static pool: null | Pool = null;
 
@@ -14,8 +14,8 @@ export default class DbController extends Database {
     }
 
     __getPoolConfig() {
-        if (DbController.poolConfig){
-            return DbController.poolConfig;
+        if (DbHandler.poolConfig){
+            return DbHandler.poolConfig;
         }
 
         dotenv.config();
@@ -38,20 +38,20 @@ export default class DbController extends Database {
                 ca: fs.readFileSync('./dist/config/sherlock-db-ca.pem'),
             }
         }
-        DbController.poolConfig = poolConfig;
+        DbHandler.poolConfig = poolConfig;
         return poolConfig;
     }
 
     __createPool(poolOptions: PoolOptions) {
-        if (!DbController.pool) {
-            DbController.pool = createPool(DbController.poolConfig ?? poolOptions);
+        if (!DbHandler.pool) {
+            DbHandler.pool = createPool(DbHandler.poolConfig ?? poolOptions);
         }
-        return DbController.pool
+        return DbHandler.pool
     }
     execQuery(query: string, params: Array<string>): Promise<any> {
         return new Promise((resolve, reject) => {
             // @ts-ignore
-            DbController.pool.getConnection((err, connection) => {
+            DbHandler.pool.getConnection((err, connection) => {
                 console.log("Getting Connection...")
                 if (err) {
                     return reject({
