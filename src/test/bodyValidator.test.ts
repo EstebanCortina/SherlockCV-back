@@ -30,16 +30,17 @@ describe('bodyValidator', () => {
         expect(next.called).to.be.false;
     });
 
-    it('should pass validation body', async ()=> {
+    it('should respond  "Missing required fields"', async ()=> {
         let req = {
             body: {"name": "Esteban"},
             route: {path: "/signup"}
         };
-        await bodyValidator(
+        let response = await bodyValidator(
             (req as unknown as Request),
             (res as unknown as Response),
             (next as unknown as NextFunction)
         );
-        expect(next.called).to.be.true;
+        console.log(response)
+        expect(next.called).to.be.false;
     });
 });
