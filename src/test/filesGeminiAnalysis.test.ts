@@ -1,9 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import * as chai from "chai"
-import sinon from 'sinon'
 import {GeminiAiModel} from "../models/GeminiAiModel.js";
-import {assert, config, expect} from "chai";
+import {expect} from "chai";
 import {Prompt} from "../types/Prompt.js";
 
 class TestGeminiAiModel extends GeminiAiModel {
