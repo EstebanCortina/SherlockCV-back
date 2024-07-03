@@ -11,7 +11,7 @@ setDatabaseCA()
 
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === "prod" ? "combined" : "dev"));
 
 
 import router from "./routes/index.js";
