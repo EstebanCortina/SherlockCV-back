@@ -24,17 +24,7 @@ export default class DbHandler extends Database {
             throw new Error("DB_URI environment variable is missing");
         }
 
-        if (!process.env.DB_PEM) {
-            throw new Error("DB_PEM environment variable is missing");
-        }
         const uri = new URL(process.env.DB_URI);
-
-        const sslCert = process.env.DB_PEM;
-
-        const sslCertPath = 'config.pem';
-
-        fs.writeFileSync(sslCertPath, sslCert);
-
 
         const poolConfig: PoolOptions = {
             host: uri.hostname,
@@ -62,7 +52,7 @@ export default class DbHandler extends Database {
     }
     execQuery(query: string, params: Array<string>): Promise<any> {
         return new Promise((resolve, reject) => {
-            let serverError: InternalServerError;
+            let serverError: InternalServerError = {httpStatus: 500, message: "", data: null};
             // @ts-ignore
             DbHandler.pool.getConnection((err, connection) => {
                 console.log("Getting Connection...")

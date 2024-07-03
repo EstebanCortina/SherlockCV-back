@@ -4,8 +4,10 @@ dotenv.config();
 import express, {Express} from "express";
 import morgan from "morgan";
 import cors from "cors";
+import setDatabaseCA from "./config/setDatabaseCA.js"
 
 const app:Express = express();
+setDatabaseCA()
 
 app.use(cors());
 app.use(express.json());
