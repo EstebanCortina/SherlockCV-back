@@ -1,6 +1,7 @@
 import fs from 'fs'
 import dotenv from "dotenv";
 import {PoolOptions, Pool, createPool} from "mysql2";
+import {InternalServerError} from "../types/InternalServerError.js";
 import Database from "../abstract_classes/Database.js";
 
 export default class DbHandler extends Database {
@@ -61,26 +62,27 @@ export default class DbHandler extends Database {
     }
     execQuery(query: string, params: Array<string>): Promise<any> {
         return new Promise((resolve, reject) => {
+            let serverError: InternalServerError;
             // @ts-ignore
             DbHandler.pool.getConnection((err, connection) => {
                 console.log("Getting Connection...")
                 if (err) {
-                    return reject({
-                        httpStatus: 500,
-                        message: "Error in pool connection",
-                        data: err,
-                    });
+                    serverError.httpStatus = 500;
+                    serverError.message = "Error in pool connection";
+                    serverError.data = err;
+                    return reject(serverError);
                 }
                 // @ts-ignore
                 connection.query(query, params, (err, results, fields) => {
                     console.log("Executing Query...")
+                    console.log(query)
+                    console.log(params)
                     if (err) {
                         connection.release();
-                        return reject({
-                            httpStatus: 500,
-                            message: "Error in query execution",
-                            data: err,
-                        });
+                        serverError.httpStatus = 500;
+                        serverError.message = "Error in pool connection";
+                        serverError.data = err;
+                        return reject(serverError);
                     }
                     connection.release();
                     resolve(results);

@@ -2,7 +2,7 @@ import {expect} from "chai";
 import UserModel from "../models/UserModel.js"
 
 describe('BaseModel', () => {
-    const baseModel = new UserModel("user")
+    const baseModel = new UserModel()
     it('should throw "no query provided"', async ()=> {
         try{
             await (
@@ -64,7 +64,7 @@ describe('BaseModel', () => {
         expect(typeof query).to.be.equal("string");
         expect(query).to.deep.equal(`
         INSERT INTO user 
-        (name,last_name) 
+        (name,last_name,email,password,user_type_id) 
         VALUES ('Esteban','Cortina')
         `);
     });
@@ -73,10 +73,11 @@ describe('BaseModel', () => {
         let query = await (
             baseModel.create(["?", "?"]).run(["Esteban", "Cortina"], true)
         )
+        console.log(query)
         expect(typeof query).to.be.equal("string");
         expect(query).to.deep.equal(`
         INSERT INTO user 
-        (name,last_name) 
+        (name,last_name,email,password,user_type_id) 
         VALUES (?,?)
         `);
     });

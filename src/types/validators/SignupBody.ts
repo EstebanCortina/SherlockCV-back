@@ -3,5 +3,5 @@ export default  {
     "last_name": "string",
     "email": "string",
     "password": "string",
-    "user_type": "string"
+    "user_type_id": "string"
 }

@@ -3,6 +3,7 @@ import DbHandler from "../handlers/DbHandler.js";
 export default abstract class BaseModel extends DbHandler {
     private __query: string | null = null
     private __where: string | null = null
+    private __is_retrieve_data: boolean = false
     private readonly __tableName: string
     protected constructor(tableName: string) {
         super()
@@ -14,8 +15,9 @@ export default abstract class BaseModel extends DbHandler {
         return this
     }
 
-    create(values: Array<string>){
+    create(values: Array<string | unknown>, retrieve_data: boolean = false) {
         this.__query = this.__create_insert(values)
+        this.__is_retrieve_data = retrieve_data
         return this
     }
 
@@ -57,19 +59,22 @@ export default abstract class BaseModel extends DbHandler {
         const final_query: string = `${this.__query} ${this.__where?? ""}`.slice(0, -1)
         this.__query = null
         this.__where = null
-        console.log(final_query)
-        console.log(params)
         if (query_debug) {
             return final_query
         }
-        return await this.execQuery(final_query, params)
+        const result = await this.execQuery(final_query, params)
+        if (this.__is_retrieve_data){
+            this.__is_retrieve_data = false
+            return await this.__retrieve_data(result.lastId)
+        }
+        return result
     }
 
     private __create_select(fields: Array<string>){
         return `SELECT ${fields} FROM ${this.__tableName}`
     }
 
-    private __create_insert(values: Array<string>){
+    private __create_insert(values: Array<string | unknown>){
         return (`
         INSERT INTO ${this.__tableName} 
         (${this.__get_instance_attributes()}) 
@@ -87,6 +92,17 @@ export default abstract class BaseModel extends DbHandler {
 
     private __get_instance_attributes(){
         return Object.keys(this).filter(key => !key.startsWith('_'))
+    }
+
+    private async __retrieve_data(lastId: number) {
+        let retrieve_query = `SELECT * FROM ${this.__tableName} `;
+        if (lastId) {
+            retrieve_query += ` WHERE ${lastId}`
+        } else {
+            const lastUuid = await this.execQuery("SELECT @last_uuid", [])
+            retrieve_query += ` WHERE id = '${lastUuid[0]["@last_uuid"]}'`
+        }
+        return await this.execQuery(retrieve_query, [])
     }
 
     private __get_instance_attributes_values(){
