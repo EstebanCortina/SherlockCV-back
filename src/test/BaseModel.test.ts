@@ -24,6 +24,7 @@ describe('BaseModel', () => {
                 .run([], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal("SELECT * FROM user");
     });
 
     it('should create a basic SELECT query selecting fields', async ()=> {
@@ -32,6 +33,7 @@ describe('BaseModel', () => {
                 .run([], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal("SELECT name,last_name FROM user");
     });
 
     it('should create a basic SELECT query with multiple where clauses', async ()=> {
@@ -42,14 +44,17 @@ describe('BaseModel', () => {
                 .run(["Esteban", "Cortina", "a"], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal("SELECT * FROM user WHERE name = ?,last_name = ?,a = ?");
     });
 
     it('should create a basic SELECT query with a single where clause by id', async ()=> {
+        let id = 1
         let query = await (
-            baseModel.find(1)
-                .run(["Esteban", "Cortina", "a"], true)
+            baseModel.find(id)
+                .run([], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal(`SELECT * FROM user WHERE id = ${id}`);
     });
 
     it('should create a basic INSERT query', async ()=> {
@@ -57,6 +62,11 @@ describe('BaseModel', () => {
             baseModel.create(["Esteban", "Cortina"]).run([], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal(`
+        INSERT INTO user 
+        (name,last_name) 
+        VALUES ('Esteban','Cortina')
+        `);
     });
 
     it('should create a basic INSERT query using params', async ()=> {
@@ -64,6 +74,11 @@ describe('BaseModel', () => {
             baseModel.create(["?", "?"]).run(["Esteban", "Cortina"], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal(`
+        INSERT INTO user 
+        (name,last_name) 
+        VALUES (?,?)
+        `);
     });
 
     it('should create a basic UPDATE query using params', async ()=> {
@@ -71,6 +86,7 @@ describe('BaseModel', () => {
             baseModel.update(["name=?", "last_name=?"]).where(`id = 1`).run(["Esteban", "Cortina"], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.be.deep.equal("UPDATE user SET name=?,last_name=? WHERE id = 1")
     });
 
     it('should create an UPDATE query setting deleted_at to CURRENT_TIMESTAMP', async ()=> {
@@ -78,6 +94,7 @@ describe('BaseModel', () => {
             baseModel.delete_soft().where(`id = 1`).run([], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.be.deep.equal("UPDATE user SET deleted_at = CURRENT_TIMESTAMP WHERE id = 1")
     });
 
     it('should create a DELETE query', async ()=> {
@@ -85,5 +102,6 @@ describe('BaseModel', () => {
             baseModel.delete().where(`id = 1`).run([], true)
         )
         expect(typeof query).to.be.equal("string");
+        expect(query).to.be.deep.equal("DELETE FROM user WHERE id = 1")
     });
 });
