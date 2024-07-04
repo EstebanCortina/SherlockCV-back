@@ -66,7 +66,6 @@ export default class DbHandler extends Database {
                 connection.query(query, params, (err, results, fields) => {
                     console.log("Executing Query...")
                     console.log(query)
-                    console.log(params)
                     if (err) {
                         connection.release();
                         serverError.httpStatus = 500;
