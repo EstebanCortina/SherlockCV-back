@@ -11,7 +11,10 @@ router.get("/", (req, res) => {
 
 import signUpController from '../controllers/signUpController.js'
 import bodyValidator from "../middlewares/bodyValidator.js";
-router.post("/signup", bodyValidator,signUpController);
+router.post("/signup", bodyValidator, signUpController);
+
+import loginController from "../controllers/loginController.js"
+router.post("/login", bodyValidator, loginController);
 
 import upload_controller from "../controllers/upload_controllers.js";
 import filesGeminiAnalysis from "../middlewares/filesGeminiAnalysis.js";
