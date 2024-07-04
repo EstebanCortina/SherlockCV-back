@@ -1,12 +1,45 @@
 import {Request, Response} from 'express';
 import UserModel from "../models/UserModel.js";
 
+const model = new UserModel()
+
 export default async (req: Request, res: Response)  => {
-    try{
-        const newUser = await new UserModel().create(["?", "?", "?", "?", "?"], true).run(Object.values(req.body))
-        res.status(200).send({message: 'New user registered', data: newUser});
+    try {
+        if (await emailAlreadyExists(req.body.email)) {
+
+            return res.status(409).send(
+                {
+                    message: 'Account already exists with this email'
+                });
+
+        }
+
+        const newUser = await (
+            model
+                .create(
+                    ["?", "?", "?", "?", "?"],
+                true)
+        ).run(Object.values(req.body))
+
+        return res.status(200).send(
+            {
+                message: 'New user registered', data: newUser
+            });
+
     }catch (err: any){
         console.log(err)
-        res.status(err.httpStatus).send({message: 'Internal Server Error'});
+
+        return res.status(err.httpStatus).send(
+            {
+                message: 'Internal Server Error'
+            });
     }
+}
+
+async function emailAlreadyExists(email: string): Promise<boolean> {
+    const exists = await (
+        model.index(["id"])
+            .where("email = ?")
+    ).run([email])
+    return exists.length > 0
 }
