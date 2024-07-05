@@ -7,7 +7,8 @@ import cors from "cors";
 import setDatabaseCA from "./config/setDatabaseCA.js"
 
 const app:Express = express();
-setDatabaseCA()
+
+if (process.env.NODE_ENV === 'dev') setDatabaseCA()
 
 app.use(cors());
 app.use(express.json());
