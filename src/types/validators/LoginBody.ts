@@ -1,4 +1,8 @@
 export default  {
-    "email": "string",
-    "password": "string"
+    "required":
+        {
+            "email": "string",
+            "password": "string"
+        },
+    "optional": {"phone": "number"}
 }
