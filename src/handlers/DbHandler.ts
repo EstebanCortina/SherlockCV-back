@@ -37,7 +37,7 @@ export default class DbHandler extends Database {
             queueLimit: 0,
             ssl: {
                 rejectUnauthorized: true,
-                ca: fs.readFileSync('config.pem'),
+                ca: fs.readFileSync(process.env.NODE_ENV === 'prod' ? '/etc/secrets/config.pem' : 'config.pem'),
             }
         }
         DbHandler.poolConfig = poolConfig;
