@@ -28,9 +28,7 @@ export default async (req: Request, res: Response)  => {
                 true)
         ).run(Object.values(req.body))
 
-
-
-        return res.status(200).send(
+        return res.status(201).send(
             {
                 message: 'New user registered', data: newUser
             });
