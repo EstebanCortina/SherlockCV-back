@@ -1,5 +1,5 @@
 import * as jose from 'jose'
-import {JWTPayload} from "jose";
+import type {SessionJWT} from "../types/SessionJWT.js";
 
 export default class SJWT {
     private static _secret: string;
@@ -20,13 +20,20 @@ export default class SJWT {
             .encrypt(secret)
     }
 
-    static async decrypt(jwt: string): Promise<JWTPayload> {
+    static async decrypt(jwt: string): Promise<SessionJWT> {
         const secret = jose.base64url.decode(SJWT._secret)
         const {payload} = await jose.jwtDecrypt(jwt, secret, {
             issuer: "SherlockCV",
             audience: "SherlockCV-Front"
         })
-        return payload
+        return {
+            // @ts-ignore
+            userId: payload.userId,
+            // @ts-ignore
+            userName: payload.userName,
+            // @ts-ignore
+            userTypeName: payload.userTypeName
+        }
     }
 
     private _getSecret(secretWord: string) {
