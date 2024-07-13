@@ -1,6 +1,7 @@
 import express from 'express'
 import processFiles from "../middlewares/processFiles.js";
 import validateFiles from "../middlewares/validateFiles.js";
+import protectRouteSJWT from "../middlewares/protectRouteSJWT.js";
 const router = express.Router()
 
 const upload = multer();
@@ -26,5 +27,8 @@ router.post("/upload",
     filesGeminiAnalysis,
     upload_controller);
 
+router.get('/protected', protectRouteSJWT({"Admin": true}), (req, res) => {
+  res.status(200).send("Protected");
+})
 
 export default router

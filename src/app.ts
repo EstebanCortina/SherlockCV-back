@@ -6,10 +6,13 @@ import type {Express} from "express"
 import morgan from "morgan";
 import cors from "cors";
 import setDatabaseCA from "./config/setDatabaseCA.js"
+import SJWT from "./config/SJWT.js";
 
 const app:Express = express();
 
 if (process.env.NODE_ENV === 'dev') setDatabaseCA()
+
+new SJWT(process.env.JWT_SECRET ?? "bfa23552a7dfbb447ada6cac37d7fd34");
 
 const allowedOrigins = [
     process.env.LOCAL_URL_FRONT,
