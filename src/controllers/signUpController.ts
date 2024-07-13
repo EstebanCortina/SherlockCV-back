@@ -1,9 +1,11 @@
 import {Request, Response} from 'express';
 import UserModel from "../models/UserModel.js";
+import UserTypeModel from "../models/UserTypeModel.js";
 
 const model = new UserModel()
 
 export default async (req: Request, res: Response)  => {
+    const body = req.body;
     try {
         if (await emailAlreadyExists(req.body.email)) {
 
@@ -14,12 +16,19 @@ export default async (req: Request, res: Response)  => {
 
         }
 
+        req.body.user_type_id = (
+            await new UserTypeModel()
+                .getUserTypeIdByName("Recruiter")
+        )
+
         const newUser = await (
             model
                 .create(
                     ["?", "?", "?", "?", "?"],
                 true)
         ).run(Object.values(req.body))
+
+
 
         return res.status(200).send(
             {

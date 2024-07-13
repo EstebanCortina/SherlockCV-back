@@ -46,8 +46,10 @@ export default class DbHandler extends Database {
 
     __createPool(poolOptions: PoolOptions) {
         if (!DbHandler.pool) {
+            console.log("New Pool")
             DbHandler.pool = createPool(DbHandler.poolConfig ?? poolOptions);
         }
+        console.log("Reusing Pool...");
         return DbHandler.pool
     }
     execQuery(query: string, params: Array<string>): Promise<any> {

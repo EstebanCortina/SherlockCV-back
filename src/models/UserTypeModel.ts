@@ -7,4 +7,14 @@ export default class UserTypeModel extends BaseModel{
         super("user_type");
     }
 
+
+    async getUserTypeIdByName(userTypeName: string){
+        return (
+            await this
+                .index(["id"])
+                .where(["name=?"])
+                .run([userTypeName])
+        )[0].id
+    }
+
 }
