@@ -1,5 +1,6 @@
 export default (routePath: string): string => {
-    return (routePath.split("/").map((part: string) => {
+    //Regular expression for "/" & "-"
+    return (routePath.split(/[\\/-]/).map((part: string) => {
         let param = part.split(":")[1]
         if (param){
             // param = part
