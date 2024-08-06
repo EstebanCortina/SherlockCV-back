@@ -44,11 +44,6 @@ export default (baseRoutePath: string = '') => async (
                 return res.status(400).send(badRequest())
             }
         }
-
-        if (typeof value === 'object') {
-            req.body[key] = JSON.stringify(req.body[key])
-        }
-
     }
     if (Object.keys(requiredFields).length) {
         console.log("Missing required fields in body");

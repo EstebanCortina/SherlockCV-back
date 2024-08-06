@@ -4,6 +4,7 @@ declare namespace Express {
       bodyValidatorError: {
          "error": string,
          "info": any
-      }
+      },
+      safeBody: {[key: string]: unknown}
    }
 }
