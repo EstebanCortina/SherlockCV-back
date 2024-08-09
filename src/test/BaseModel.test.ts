@@ -1,5 +1,6 @@
 import {expect} from "chai";
 import UserModel from "../models/UserModel.js"
+import {EntityBody} from "../types/EntityBody.js";
 
 describe('BaseModel', () => {
     const baseModel = new UserModel()
@@ -64,7 +65,7 @@ describe('BaseModel', () => {
         expect(typeof query).to.be.equal("string");
         expect(query).to.deep.equal(`
         INSERT INTO user 
-        (name,last_name,email,password,user_type_id) 
+        (name,last_name,email,password,user_type_id)
         VALUES ('Esteban','Cortina')
         `);
     });
@@ -73,12 +74,44 @@ describe('BaseModel', () => {
         let query = await (
             baseModel.create(["?", "?"]).run(["Esteban", "Cortina"], true)
         )
-        console.log(query)
+
         expect(typeof query).to.be.equal("string");
         expect(query).to.deep.equal(`
         INSERT INTO user 
-        (name,last_name,email,password,user_type_id) 
+        (name,last_name,email,password,user_type_id)
         VALUES (?,?)
+        `);
+    });
+
+    it('should create a basic INSERT query using ordered EntityBody', async ()=> {
+        let query = await (
+            baseModel.create({
+                "name": "Esteban",
+                "last_name": "Cortina"
+            }).run([], true)
+        )
+
+        expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal(`
+        INSERT INTO user 
+        (name,last_name)
+        VALUES ('Esteban','Cortina')
+        `);
+    });
+
+    it('should create a basic INSERT query using unordered EntityBody', async ()=> {
+        let query = await (
+            baseModel.create({
+                "last_name": "Cortina",
+                "name": "Esteban"
+            }).run([], true)
+        )
+
+        expect(typeof query).to.be.equal("string");
+        expect(query).to.deep.equal(`
+        INSERT INTO user 
+        (last_name,name)
+        VALUES ('Cortina','Esteban')
         `);
     });
 
@@ -104,5 +137,38 @@ describe('BaseModel', () => {
         )
         expect(typeof query).to.be.equal("string");
         expect(query).to.be.deep.equal("DELETE FROM user WHERE id = 1")
+    });
+
+    it('should order the input values according to the entity attributes in database', ()=> {
+        let sample = {
+                "name": "Esteban",
+                "last_name": "Cortina",
+                "email": "ecortina@gmail.com",
+                "password": "123",
+                "user_type_id": "098"
+            }
+        let oParams =  (
+            baseModel.__order_query_values({
+                "name": "Esteban",
+                "last_name": "Cortina",
+                "email": "ecortina@gmail.com",
+                "password": "123",
+                "user_type_id": "098"
+            })
+        )
+
+        expect(oParams).to.be.deep.equal(sample)
+        oParams =  (
+            baseModel.__order_query_values({
+                "last_name": "Cortina",
+                "name": "Esteban",
+                "password": "123",
+                "user_type_id": "098",
+                "email": "ecortina@gmail.com"
+            })
+        )
+        console.log("segundo ordenamiento")
+
+        expect(oParams).to.be.deep.equal(sample)
     });
 });

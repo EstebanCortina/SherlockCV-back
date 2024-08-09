@@ -2,25 +2,43 @@ import {Request, Response, NextFunction} from 'express'
 import sinon from 'sinon'
 import {expect} from "chai";
 import bodyValidator from "../middlewares/bodyValidator.js";
+import getBodyValidatorByRoutePath from "../helpers/getBodyValidatorByRoutePath.js";
 
 describe('bodyValidator', () => {
-        let res: { status: any; send: any; },
+    let res: { status: any; send: any; },
         next: sinon.SinonSpy<any[], any>;
 
+    let req = {
+        body: {
+            "field_string": "string",
+            "field_number": 10,
+            "field_object": []
+        },
+        bodyValidatorError: {"error": "", "info": {}},
+        path: "/unit/test/:id/split-word"
+    };
+
     beforeEach(()=> {
+        let validatorPath = getBodyValidatorByRoutePath(req.path);
+        if (!(validatorPath === 'UnitTestIdSplitWordBody.js')){
+            throw new Error('Error getting body validator path');
+        }
         res = {
             status: sinon.stub().returnsThis(),
             send: sinon.stub()
         };
+
         next = sinon.spy();
     });
 
     it('should respond with 400 for bad request', async ()=> {
-        let req = {
-            body: {"name": 123},
-            route: {path: "/signup"}
-        };
-        await bodyValidator(
+        req.body = {
+            "field_string": "string",
+            // @ts-ignore
+            "field_number": "10",
+            "field_object": []
+        }
+        await (bodyValidator())(
             (req as unknown as Request),
             (res as unknown as Response),
             (next as unknown as NextFunction)
@@ -30,17 +48,37 @@ describe('bodyValidator', () => {
         expect(next.called).to.be.false;
     });
 
-    it('should respond  "Missing required fields"', async ()=> {
-        let req = {
-            body: {"name": "Esteban"},
-            route: {path: "/signup"}
-        };
-        let response = await bodyValidator(
+    it('should respond  "Missing required fields in body"', async ()=> {
+
+        // @ts-ignore
+        req.body = {
+            "field_string": "abc",
+            // "field_number": "10",
+            "field_object": []
+        }
+
+        await (bodyValidator())(
             (req as unknown as Request),
             (res as unknown as Response),
             (next as unknown as NextFunction)
         );
-        console.log(response)
         expect(next.called).to.be.false;
+        expect(req.bodyValidatorError.error).to.be.equal("Missing required fields in body")
+        expect(req.bodyValidatorError.info).to.be.deep.equal({ field_number: 'number' })
     });
+
+    it('should find the validator for a path with params', async ()=> {
+        req.body = {
+                "field_string": "string",
+                "field_number": 10,
+                "field_object": []
+            }
+        await (bodyValidator())(
+            (req as unknown as Request),
+            (res as unknown as Response),
+            (next as unknown as NextFunction)
+        );
+        expect(next.called).to.be.true;
+    });
+
 });

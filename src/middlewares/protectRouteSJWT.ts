@@ -3,6 +3,7 @@ import type {WhiteList} from "../types/WhiteList.js";
 import extractBearerToken from "../helpers/extractBearerToken.js";
 import SJWT from "../config/SJWT.js";
 import badRequest from "../messages/error/badRequest.js";
+import {SessionJWT} from "../types/SessionJWT.js";
 
 export default (allowedUserTypeNames: WhiteList) => async (
     req: Request,
@@ -16,14 +17,19 @@ export default (allowedUserTypeNames: WhiteList) => async (
         );
     }
 
-    let userTypeName: string;
+    let payload: SessionJWT;
     try {
 
-        userTypeName = (
+        payload = (
             await SJWT.decrypt(
                 extractBearerToken(req.headers.authorization)
             )
-        ).userTypeName
+        )
+
+        // @ts-ignore
+        req.userId = payload?.userId
+        // @ts-ignore
+        req.userTypeName = payload?.userTypeName;
 
     } catch (e: any) {
 
@@ -37,7 +43,7 @@ export default (allowedUserTypeNames: WhiteList) => async (
     }
 
     // @ts-ignore
-    if (allowedUserTypeNames[userTypeName] === undefined) {
+    if (allowedUserTypeNames[payload.userTypeName] === undefined) {
         return res.status(403).send(badRequest(
             403,"Forbidden")
         );
