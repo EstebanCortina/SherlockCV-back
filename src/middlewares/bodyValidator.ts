@@ -13,6 +13,11 @@ export default (baseRoutePath: string = '') => async (
     const module = await import((`../types/validators/${validatorFilename}`))
     let requiredFields: {[key:string]: string} = {};
 
+    if((req.method === 'POST' || req.method === 'PUT') &&
+        !Object.keys(req.body).length){
+        return res.status(400).send(badRequest());
+    }
+
     if(req.method === 'POST' || req.method === undefined) {
         requiredFields = JSON.parse(JSON.stringify(module.default.required));
     }
