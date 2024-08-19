@@ -5,6 +5,16 @@ import SJWT from "../config/SJWT.js";
 import badRequest from "../messages/error/badRequest.js";
 import {SessionJWT} from "../types/SessionJWT.js";
 
+/**
+ * Validates if the user has enough privileges to request the resource
+ *
+ * This function extracts the authorization encrypted token from
+ * `req.headers.authorization`. This token is generated at login moment,
+ * and it needs to be sent in every petition.
+ *
+ * @async
+ * @param allowedUserTypeNames WhiteList
+ */
 export default (allowedUserTypeNames: WhiteList) => async (
     req: Request,
     res: Response,

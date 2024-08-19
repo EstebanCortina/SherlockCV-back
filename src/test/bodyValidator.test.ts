@@ -68,11 +68,28 @@ describe('bodyValidator', () => {
     });
 
     it('should find the validator for a path with params', async ()=> {
+        //@ts-ignore
         req.body = {
                 "field_string": "string",
                 "field_number": 10,
                 "field_object": []
             }
+        await (bodyValidator())(
+            (req as unknown as Request),
+            (res as unknown as Response),
+            (next as unknown as NextFunction)
+        );
+        expect(next.called).to.be.true;
+    });
+
+    it('should validate the req.body.data variation for formData format', async ()=> {
+        // The information comes in req.body.data
+        //@ts-ignore
+        req.body.data = JSON.stringify({
+                "field_string": "string",
+                "field_number": 10,
+                "field_object": []
+        });
         await (bodyValidator())(
             (req as unknown as Request),
             (res as unknown as Response),

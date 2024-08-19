@@ -1,7 +1,6 @@
 import express from 'express'
 import type { Request, Response } from 'express'
 import processFiles from "../middlewares/processFiles.js";
-import validateFiles from "../middlewares/validateFiles.js";
 import protectRouteSJWT from "../middlewares/protectRouteSJWT.js";
 const router = express.Router()
 
@@ -25,15 +24,16 @@ router.use('/job-positions',
       "Recruiter": true
     }), jobPositionsRouter)
 
-import upload_controller from "../controllers/upload_controllers.js";
-import filesGeminiAnalysis from "../middlewares/filesGeminiAnalysis.js";
+import CAPcontroller from "../controllers/CAPcontroller.js";
+import generateGeminiAnalysis from "../middlewares/generateGeminiAnalysis.js";
 import multer from "multer";
-router.post("/upload",
-    upload.array('file'),
-    validateFiles,
+router.post("/start-analysis",
+    upload.array('candidates_files'), // This middleware only works at first place
+    //protectRouteSJWT({"Admin": true}),
+    bodyValidator(),
     processFiles,
-    filesGeminiAnalysis,
-    upload_controller);
+    generateGeminiAnalysis,
+    CAPcontroller);
 
 router.get('/protected', protectRouteSJWT({"Admin": true}), (req, res) => {
   res.status(200).send("Protected");
