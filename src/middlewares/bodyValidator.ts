@@ -3,7 +3,15 @@ import getBodyValidatorByRoutePath from "../helpers/getBodyValidatorByRoutePath.
 import badRequest from "../messages/error/badRequest.js";
 
 
-
+/**
+ * Validates if the `req.body` or `req.body.data` has a specific content
+ *
+ * It is necessary to have a validator in ../types/validators with the expected structure.
+ * If the middleware is used at route level, the validator file name should follow
+ * the path name.
+ *
+ * @param baseRoutePath string
+ */
 export default (baseRoutePath: string = '') => async (
     req: Request,
     res: Response,
@@ -12,6 +20,8 @@ export default (baseRoutePath: string = '') => async (
     const validatorFilename = getBodyValidatorByRoutePath(baseRoutePath !== '' ? baseRoutePath : req.path);
     const module = await import((`../types/validators/${validatorFilename}`))
     let requiredFields: {[key:string]: string} = {};
+
+    req.body = req.body.data? JSON.parse(req.body.data) : req.body
 
     if((req.method === 'POST' || req.method === 'PUT') &&
         !Object.keys(req.body).length){
@@ -29,8 +39,8 @@ export default (baseRoutePath: string = '') => async (
         }
 
         if (typeof value !== allFields[key]) {
-            console.log("Bad body request")
-            console.log(req.body)
+            console.log("Bad body request data types")
+            console.log(key,typeof value, '!==', allFields[key])
             req.bodyValidatorError = {
                 "error": "Bad body request data types",
                 "info": req.body
@@ -40,7 +50,7 @@ export default (baseRoutePath: string = '') => async (
 
         if (typeof value === "string"){
             if (!allFields[key].length) {
-                console.log("Bad body request")
+                console.log("Bad body request empty string")
                 console.log(req.body)
                 req.bodyValidatorError = {
                     "error": "Bad body request empty string",

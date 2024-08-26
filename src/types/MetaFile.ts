@@ -1,4 +1,5 @@
 export type MetaFile = {
-    fileName: string | null;
-    content: string | null;
+    fileName: string;
+    content: string;
+    buffer: ArrayBuffer;
 }

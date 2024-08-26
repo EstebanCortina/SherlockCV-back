@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === 'dev') setDatabaseCA()
 
 new SJWT(process.env.JWT_SECRET ?? "bfa23552a7dfbb447ada6cac37d7fd34");
 
+//Modificar esto por un diccionario
 const allowedOrigins = [
     process.env.LOCAL_URL_FRONT,
     process.env.QA_URL_FRONT,
@@ -36,6 +37,7 @@ app.use(cors({
     optionsSuccessStatus: 204
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === "prod" ? "combined" : "dev"));
 
 

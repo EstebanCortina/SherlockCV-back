@@ -5,6 +5,8 @@ declare namespace Express {
          "error": string,
          "info": any
       },
-      safeBody: {[key: string]: unknown}
+      safeBody: {[key: string]: unknown},
+      candidatesInfo: Array<T>,
+      analysis: string
    }
 }

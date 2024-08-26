@@ -59,7 +59,7 @@ export default abstract class BaseModel extends DbHandler {
 
 
 
-    async run(params: Array<string> = [], query_debug: boolean = false) {
+    async run(params: Array<any> = [], query_debug: boolean = false) {
         if (!this.__query) {
             this.__where = null
             throw new Error("No query provided")
