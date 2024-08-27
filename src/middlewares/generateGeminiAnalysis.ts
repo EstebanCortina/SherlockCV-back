@@ -19,7 +19,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     const {job_position_name, job_position_description, score_list} = req.body
 
-    //console.log(makePrompt(job_position_name, job_position_description, makeScoreList(score_list), req.candidatesInfo))
+    console.log(makePrompt(job_position_name, job_position_description, makeScoreList(score_list), req.candidatesInfo))
     // TODO: next refactor PromptMaker
     req.analysis = await gemini.sendPrompt(
         makePrompt(

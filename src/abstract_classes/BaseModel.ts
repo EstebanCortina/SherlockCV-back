@@ -77,8 +77,9 @@ export default abstract class BaseModel extends DbHandler {
             const result = await this.execQuery(final_query, params)
             if (this.__is_retrieve_data){
                 console.log("retrieve")
+                console.log(result)
                 this.__is_retrieve_data = false
-                return await this.__retrieve_data(result.lastId)
+                return await this.__retrieve_data(result.insertId)
             }
             return result
         }catch (e) {
@@ -154,10 +155,10 @@ export default abstract class BaseModel extends DbHandler {
     private async __retrieve_data(lastId: number) {
         let retrieve_query = `SELECT * FROM ${this.__tableName} `;
         if (lastId) {
-            retrieve_query += ` WHERE ${lastId}`
+            retrieve_query += `WHERE id = ${lastId}`
         } else {
             const lastUuid = await this.execQuery("SELECT @last_uuid", [])
-            retrieve_query += ` WHERE id = '${lastUuid[0]["@last_uuid"]}'`
+            retrieve_query += `WHERE id = '${lastUuid[0]["@last_uuid"]}'`
         }
         return (await this.execQuery(retrieve_query, []))[0]?? {}
     }

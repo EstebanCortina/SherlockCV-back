@@ -5,7 +5,7 @@ import JobPositionModel from "../models/JobPositionModel.js";
 
 const controllerModel = new JobPositionModel();
 
-export default class JobPositionsController {
+class JobPositionsController {
 
     /**
      * Handles the request to retrieve job positions for the authenticated user.
@@ -18,9 +18,9 @@ export default class JobPositionsController {
      * @function indexAsync
      * @param {Request} req - The HTTP request object, expected to contain a `userId` property.
      * @param {Response} res - The HTTP response object used to send the response.
-     * @returns {Promise<void>} Sends a response with a status of 200 and the job positions data.
+     * @returns {Promise<Response>} Sends a response with a status of 200 and the job positions data.
      */
-    async indexAsync(req: Request, res: Response): Promise<void> {
+    async indexAsync(req: Request, res: Response): Promise<Response> {
 
         const jobPositions = await(
             controllerModel
@@ -28,7 +28,7 @@ export default class JobPositionsController {
                 .where("user_id=?")
         ).run([req.userId])
 
-        res.status(200).send(success(
+        return res.status(200).send(success(
             200,
             "Job Positions",
             jobPositions)
@@ -46,9 +46,9 @@ export default class JobPositionsController {
      * @function showAsync
      * @param {Request} req - The HTTP request object, expected to contain `params.id` for the job position ID and a `userId` property.
      * @param {Response} res - The HTTP response object used to send the response.
-     * @returns {Promise<any>} Sends a response with a status of 200 and the job position data if found, otherwise sends a 404 response.
+     * @returns {Promise<Response>} Sends a response with a status of 200 and the job position data if found, otherwise sends a 404 response.
      */
-    async showAsync(req: Request, res: Response): Promise<any> {
+    async showAsync(req: Request, res: Response): Promise<Response> {
 
         const jobPosition = await(
             controllerModel.getJobPositionById(req.params.id, req.userId)
@@ -60,7 +60,7 @@ export default class JobPositionsController {
             ))
         }
 
-        res.status(200).send(success(
+        return res.status(200).send(success(
             200,
             "Job Position",
             jobPosition)
@@ -78,9 +78,9 @@ export default class JobPositionsController {
      * @function createAsync
      * @param {Request} req - The HTTP request object, expected to contain job position data in the body and a `userId` property.
      * @param {Response} res - The HTTP response object used to send the response.
-     * @returns {Promise<void>} Sends a response with a status of 201 and the newly created job position data.
+     * @returns {Promise<Response>} Sends a response with a status of 201 and the newly created job position data.
      */
-    async createAsync(req: Request, res: Response): Promise<void> {
+    async createAsync(req: Request, res: Response): Promise<Response> {
 
         req.body.user_id = req.userId;
         req.body.key_points = JSON.stringify(req.body.key_points);
@@ -90,7 +90,7 @@ export default class JobPositionsController {
                 true)
         ).run();
 
-        res.status(201).send(success(
+        return res.status(201).send(success(
             201,
             "Job Position Created",
             newJobPosition)
@@ -107,11 +107,11 @@ export default class JobPositionsController {
      * @function updateAsync
      * @param {Request} req - The HTTP request object, expected to contain `params.id` for the job position ID, a `userId` property, and the update data in the body.
      * @param {Response} res - The HTTP response object used to send the response.
-     * @returns {Promise<any>} Sends a response with a status of 200 and the updated job position data if the update is successful, otherwise sends a 404 response.
+     * @returns {Promise<Response>} Sends a response with a status of 200 and the updated job position data if the update is successful, otherwise sends a 404 response.
      */
 
 
-    async updateAsync(req: Request, res: Response): Promise<any> {
+    async updateAsync(req: Request, res: Response): Promise<Response> {
 
         if (req.body.key_points) {
             req.body.key_points = JSON.stringify(req.body.key_points);
@@ -134,7 +134,7 @@ export default class JobPositionsController {
                 .where(`id='${req.params.id}'`)
         ).run();
 
-        res.status(200).send(success(
+        return res.status(200).send(success(
             200,
             "Job Position Updated",
             updatedJobPosition)
@@ -152,9 +152,9 @@ export default class JobPositionsController {
      * @function toggleIsOpenAsync
      * @param {Request} req - The HTTP request object, expected to contain `params.id` for the job position ID and a `userId` property.
      * @param {Response} res - The HTTP response object used to send the response.
-     * @returns {Promise<any>} Sends a response with a status of 200 and the updated job position data if the update is successful, otherwise sends a 404 response.
+     * @returns {Promise<Response>} Sends a response with a status of 200 and the updated job position data if the update is successful, otherwise sends a 404 response.
      */
-    async toggleIsOpenAsync(req: Request, res: Response): Promise<any> {
+    async toggleIsOpenAsync(req: Request, res: Response): Promise<Response> {
 
         const jobPositionToUpdate = await(
             controllerModel.getJobPositionById(req.params.id, req.userId)
@@ -173,7 +173,7 @@ export default class JobPositionsController {
                 .where(`id='${req.params.id}'`)
         ).run();
 
-        res.status(200).send(success(
+        return res.status(200).send(success(
             200,
             "Job Position Updated",
             updatedJobPosition)
@@ -191,9 +191,9 @@ export default class JobPositionsController {
      * @function deleteSoftAsync
      * @param {Request} req - The HTTP request object, expected to contain `params.id` for the job position ID and a `userId` property.
      * @param {Response} res - The HTTP response object used to send the response.
-     * @returns {Promise<any>} Sends a response with a status of 200 and a message indicating the job position has been softly deleted if successful, otherwise sends a 404 response.
+     * @returns {Promise<Response>} Sends a response with a status of 200 and a message indicating the job position has been softly deleted if successful, otherwise sends a 404 response.
      */
-    async deleteSoftAsync(req: Request, res: Response): Promise<any> {
+    async deleteSoftAsync(req: Request, res: Response): Promise<Response> {
 
         const jobPositionToDelete = await(
             controllerModel.getJobPositionById(req.params.id, req.userId)
@@ -210,7 +210,7 @@ export default class JobPositionsController {
                 .where(`id=?`)
         ).run([req.params.id]);
 
-        res.status(200).send(success(
+        return res.status(200).send(success(
             200,
             "Job Position Deleted",
             deletedJobPosition)
@@ -231,3 +231,5 @@ export default class JobPositionsController {
         return Object.keys(jobPosition).length > 0
     }
 }
+
+export default new JobPositionsController();

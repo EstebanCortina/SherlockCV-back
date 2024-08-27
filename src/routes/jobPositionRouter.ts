@@ -1,34 +1,31 @@
 import {body, validationResult} from "express-validator";
 import express, {Request, Response, NextFunction} from 'express'
-const router = express.Router()
 
-import JobPositionsController from "../controllers/jobPositionsController.js";
+import JobPositionController from "../controllers/jobPositionController.js";
 import bodyValidator from "../middlewares/bodyValidator.js";
 import badRequest from "../messages/error/badRequest.js";
-import {EntityBody} from "../types/EntityBody.js";
 
+const router = express.Router()
 const path = 'job-positions'
 
-const jobPositionsController = new JobPositionsController()
-
-router.get('/', jobPositionsController.indexAsync);
+router.get('/', JobPositionController.indexAsync);
 
 router.post('/',
     bodyValidator(path),
     getBodySanitization(),
-    catchSanitizationErrors, jobPositionsController.createAsync);
+    catchSanitizationErrors, JobPositionController.createAsync);
 
-router.get('/:id', jobPositionsController.showAsync);
+router.get('/:id', JobPositionController.showAsync);
 
 router.put('/:id',
     bodyValidator(path),
     bodyValidator(path),
     getBodySanitization(),
-    catchSanitizationErrors, jobPositionsController.updateAsync);
+    catchSanitizationErrors, JobPositionController.updateAsync);
 
-router.patch('/toggle-status/:id', jobPositionsController.toggleIsOpenAsync);
+router.patch('/toggle-status/:id', JobPositionController.toggleIsOpenAsync);
 
-router.delete('/:id', jobPositionsController.deleteSoftAsync);
+router.delete('/:id', JobPositionController.deleteSoftAsync);
 
 function getBodySanitization(): Array<any>{
     return [
