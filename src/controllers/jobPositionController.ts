@@ -1,8 +1,10 @@
 import type { Response, Request} from "express";
 import success from "../messages/success.js";
 import badRequest from "../messages/error/badRequest.js";
+import JobPositionViewModel from "../models/JobPositionViewModel.js";
 import JobPositionModel from "../models/JobPositionModel.js";
 
+const jobPositionViewModel = new JobPositionViewModel();
 const controllerModel = new JobPositionModel();
 
 class JobPositionsController {
@@ -23,9 +25,9 @@ class JobPositionsController {
     async indexAsync(req: Request, res: Response): Promise<Response> {
 
         const jobPositions = await(
-            controllerModel
+            jobPositionViewModel
                 .index()
-                .where("user_id=?")
+                .where("job_position_user_id=?")
         ).run([req.userId])
 
         return res.status(200).send(success(
@@ -51,15 +53,8 @@ class JobPositionsController {
     async showAsync(req: Request, res: Response): Promise<Response> {
 
         const jobPosition = await(
-            controllerModel.getJobPositionById(req.params.id, req.userId)
+            jobPositionViewModel.getJobPositionById(req.params.id, req.userId)
         );
-
-        if (!JobPositionsController.validateJobPosition(jobPosition)) {
-            return res.status(404).send(badRequest(
-                400, "Job Position Not found"
-            ))
-        }
-
         return res.status(200).send(success(
             200,
             "Job Position",

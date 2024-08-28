@@ -55,6 +55,7 @@ class ReportController {
         reportModel
             .create({
               user_id: req.userId,
+              job_position_id: req.body.job_position_id,
               final_analysis: req.analysis
             }, true)
     ).run();
