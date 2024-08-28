@@ -4,27 +4,33 @@ import processFiles from "../middlewares/processFiles.js";
 import protectRouteSJWT from "../middlewares/protectRouteSJWT.js";
 const router = express.Router()
 
+// This instance manages the req.files property
 const upload = multer();
 
+// Health endpoint for Render.com
 router.get("/", (req, res) => {
   res.status(200).send("SherlockCV");
 });
 
+// Register a new user (default as Recruiter user-type)
 import signUpController from '../controllers/signUpController.js'
 import bodyValidator from "../middlewares/bodyValidator.js";
 router.post("/signup", bodyValidator(), signUpController);
 
+// Sign-in and get a SJWT for the web authorization
 import loginController from "../controllers/loginController.js"
 router.post("/login", bodyValidator(), loginController);
 
-import jobPositionsRouter from "./jobPositionsRouter.js";
+// CRUD Job-Positions entry point
+import jobPositionsRouter from "./jobPositionRouter.js";
 router.use('/job-positions',
     protectRouteSJWT({
       "Admin": true,
       "Recruiter": true
     }), jobPositionsRouter)
 
-import CAPcontroller from "../controllers/CAPcontroller.js";
+// Receives a CAP object and generates an analysis report
+import reportController from "../controllers/reportController.js";
 import generateGeminiAnalysis from "../middlewares/generateGeminiAnalysis.js";
 import multer from "multer";
 router.post("/start-analysis",
@@ -33,8 +39,17 @@ router.post("/start-analysis",
     bodyValidator(),
     processFiles,
     generateGeminiAnalysis,
-    CAPcontroller);
+    reportController.createAsync);
 
+// CRUD Reports entry point
+import reportRouter from "./reportRouter.js";
+router.use("/reports",
+    protectRouteSJWT({
+        "Admin": true,
+        "Recruiter": true
+    }), reportRouter)
+
+// Endpoints for the authorization test
 router.get('/protected', protectRouteSJWT({"Admin": true}), (req, res) => {
   res.status(200).send("Protected");
 })
