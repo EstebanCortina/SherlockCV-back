@@ -55,7 +55,6 @@ class JobPositionsController {
         const jobPosition = await(
             jobPositionViewModel.getJobPositionById(req.params.id, req.userId)
         );
-
         return res.status(200).send(success(
             200,
             "Job Position",
