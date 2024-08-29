@@ -35,7 +35,7 @@ class ReportController {
     const report = (await (
         reportModel
             .index()
-            .where("id=? AND user_id=? AND deleted_at IS NULL")
+            .where("job_position_id=? AND user_id=? AND deleted_at IS NULL")
     ).run([req.params.id, req.userId]))[0] ?? {};
     return res.status(200).send(success(
         200,
