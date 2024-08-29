@@ -31,7 +31,7 @@ function getBodySanitization(): Array<any>{
     return [
         body('**').trim().blacklist('<>&\'"/').escape(),
         body('name').optional().isLength({min: 2, max: 40}).withMessage("Job Position name too long or too short"),
-        body('description').optional().isLength({min: 1, max: 200}).withMessage("Job Position description too long or too short"),
+        body('description').optional().isLength({min: 1}).withMessage("Job Position description too long or too short"),
         body('key_points').optional().isArray().withMessage("Bad request")
     ]
 }

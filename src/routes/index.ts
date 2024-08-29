@@ -35,7 +35,7 @@ import generateGeminiAnalysis from "../middlewares/generateGeminiAnalysis.js";
 import multer from "multer";
 router.post("/start-analysis",
     upload.array('candidates_files'), // This middleware only works at first place
-    //protectRouteSJWT({"Admin": true}),
+    protectRouteSJWT({"Admin": true, "Recruiter": true}),
     bodyValidator(),
     processFiles,
     generateGeminiAnalysis,
