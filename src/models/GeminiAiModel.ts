@@ -47,7 +47,7 @@ export class GeminiAiModel extends AiModel {
 
     async sendPrompt(prompt: Prompt): Promise<string> {
         // TODO: make a prompt handler or make the PromptMaker
-        let rawPrompt: string =`${prompt.context} ${prompt.contextData} ${prompt.instructions} ${prompt.fewShotExamples} ${prompt.dataInput}`;
+        let rawPrompt: string =`${prompt.context} ${prompt.contextData} ${prompt.instructions} ${prompt.scoreList} ${prompt.fewShotExamples} ${prompt.dataInput}`;
         rawPrompt += `\n5.-  Salida de datos en formato Array JSON:`
         if ((await this.countPromptTokens(rawPrompt)) > this.tokensMaxLevel){
             throw new Error("Tokens max level exceeded in Request Prompt");

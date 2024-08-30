@@ -1,15 +1,44 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, {Express} from "express";
+import express from "express";
+import type {Express} from "express"
 import morgan from "morgan";
 import cors from "cors";
+import setDatabaseCA from "./config/setDatabaseCA.js"
+import SJWT from "./config/SJWT.js";
 
 const app:Express = express();
 
-app.use(cors());
+if (process.env.NODE_ENV === 'dev') setDatabaseCA()
+
+new SJWT(process.env.JWT_SECRET ?? "bfa23552a7dfbb447ada6cac37d7fd34");
+
+//Modificar esto por un diccionario
+const allowedOrigins = [
+    process.env.LOCAL_URL_FRONT,
+    process.env.QA_URL_FRONT,
+    process.env.PROD_URL_FRONT
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log("Origin not allowed: ", origin);
+        }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    credentials: true,
+    optionsSuccessStatus: 204
+}));
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan(process.env.NODE_ENV === "prod" ? "combined" : "dev"));
 
 
 import router from "./routes/index.js";
