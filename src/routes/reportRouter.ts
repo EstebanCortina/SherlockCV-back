@@ -7,4 +7,6 @@ router.get('/', reportController.indexAsync)
 
 router.get('/:id', reportController.showAsync)
 
+router.put('/:id', reportController.updateAsync)
+
 export default router;

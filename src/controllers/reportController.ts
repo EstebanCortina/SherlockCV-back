@@ -35,7 +35,7 @@ class ReportController {
     const report = (await (
         reportModel
             .index()
-            .where("id=? AND user_id=? AND deleted_at IS NULL")
+            .where("job_position_id=? AND user_id=? AND deleted_at IS NULL")
     ).run([req.params.id, req.userId]))[0] ?? {};
     return res.status(200).send(success(
         200,
@@ -64,6 +64,26 @@ class ReportController {
         201,
         "New Report Created",
         newReport
+    ));
+  }
+
+  /**
+   * Updates a report associated with the current user.
+   * @param {Request} req - The Express request object, contains `userId` and `analysis` to create the report.
+   * @param {Response} res - The Express response object.
+   * @returns {Promise<Response>} - Returns an HTTP response with status code 201 and the details of the created report.
+   */
+  async updateAsync(req: Request, res: Response): Promise<Response> {
+    const reportUpdated = await (
+        reportModel
+            .update(["final_analysis=?"], true)
+            .where("id=? AND user_id=?")
+    ).run([req.body.final_analysis, req.params.id, req.userId]);
+
+    return res.status(200).send(success(
+        200,
+        "Report Updated",
+        reportUpdated
     ));
   }
 }
