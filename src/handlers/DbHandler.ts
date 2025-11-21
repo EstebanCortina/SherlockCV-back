@@ -35,10 +35,10 @@ export default class DbHandler extends Database {
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0,
-            ssl: {
-                rejectUnauthorized: true,
-                ca: fs.readFileSync(process.env.NODE_ENV === 'prod' ? '/etc/secrets/config.pem' : 'config.pem'),
-            }
+            // ssl: {
+            //     rejectUnauthorized: true,
+            //     ca: fs.readFileSync(process.env.NODE_ENV === 'prod' ? '/etc/secrets/config.pem' : 'config.pem'),
+            // }
         }
         DbHandler.poolConfig = poolConfig;
         return poolConfig;

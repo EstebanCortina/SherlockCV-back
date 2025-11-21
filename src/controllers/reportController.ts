@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import ReportModel from "../models/ReportModel.js";
 import success from "../messages/success.js";
 
+import stripJsonFence from "../helpers/stripGeminiResponse.js"
+
 const reportModel = new ReportModel();
 
 class ReportController {
@@ -51,14 +53,11 @@ class ReportController {
    * @returns {Promise<Response>} - Returns an HTTP response with status code 201 and the details of the created report.
    */
   async createAsync(req: Request, res: Response): Promise<Response> {
+    req.analysis = stripJsonFence(req.analysis)
     const newReport = await (
         reportModel
-            .create({
-              user_id: req.userId,
-              job_position_id: req.body.job_position_id,
-              final_analysis: req.analysis
-            }, true)
-    ).run();
+            .create(["?", "?", "?", "?", "?"], true)
+    ).run([req.userId, req.body.job_position_id, req.analysis, new Date().toISOString().slice(0, 19).replace('T', ' '), null]);
 
     return res.status(201).send(success(
         201,
