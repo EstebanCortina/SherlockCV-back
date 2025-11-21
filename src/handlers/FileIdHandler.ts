@@ -109,6 +109,9 @@ async function createFrontPageUrl(fileBuffer: ArrayBuffer): Promise<string> {
                     })
                 ).catch(err => reject(err))
             }
-        ).catch(err => resolve("https://img.freepik.com/free-vector/collection-hand-drawn-profile-icons-different-people_23-2149092882.jpg?t=st=1724395464~exp=1724399064~hmac=bba9689675b6478b46ce700fca3e9ac1f61966a5fe34ca914e032993666747e1&w=740"))
+        ).catch(err =>{
+            console.error(err)
+            resolve("https://img.freepik.com/free-vector/collection-hand-drawn-profile-icons-different-people_23-2149092882.jpg?t=st=1724395464~exp=1724399064~hmac=bba9689675b6478b46ce700fca3e9ac1f61966a5fe34ca914e032993666747e1&w=740")
+        })
     })
 }

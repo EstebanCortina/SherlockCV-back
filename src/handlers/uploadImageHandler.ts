@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config()
 
-export default async (frontPageImageB64: string)=>{
+export default async (frontPageImageB64: string | undefined)=>{
+    if (frontPageImageB64 === undefined) throw new Error("Front page Undefined") 
     if (!process.env.IMAGES_API_URL || !process.env.IMAGES_API_KEY){
         throw new Error("No IMAGES_API_URL or IMAGES_API_KEY")
     }

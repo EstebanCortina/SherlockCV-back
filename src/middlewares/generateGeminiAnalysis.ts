@@ -15,7 +15,7 @@ import {Prompt} from "../types/Prompt.js";
  * @param next - Next function to execute
  */
 export default async (req: Request, res: Response, next: NextFunction) => {
-    const gemini = new GeminiAiModel(10000, "gemini-1.0-pro")
+    const gemini = new GeminiAiModel(10000, "gemini-2.5-flash")
 
     const {job_position_name, job_position_description, score_list} = req.body
 
